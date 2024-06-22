@@ -15,6 +15,13 @@ open class Translation {
     @Column(nullable = false)
     open var lang: Lang? = null;
 
+    constructor(translation: String?, lang: Lang?) {
+        this.translation = translation
+        this.lang = lang
+    }
+
+    constructor()
+
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
