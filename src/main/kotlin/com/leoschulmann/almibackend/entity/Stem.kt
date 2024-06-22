@@ -19,13 +19,15 @@ open class Stem {
     @OneToMany(mappedBy = "stem", orphanRemoval = true)
     open var verbs: MutableSet<Verb> = mutableSetOf()
 
+/*
     @Column(name = "transliteration")
     @ElementCollection
     @CollectionTable(name = "stem_transliteration", joinColumns = [JoinColumn(name = "stem_id")])
     @OrderColumn
     open var transliteration: MutableList<Transliteration> = mutableListOf()
+*/
 
-    @Column(name = "translation")
+//    @Column(name = "translation")
     @ElementCollection
     @CollectionTable(name = "stem_translation", joinColumns = [JoinColumn(name = "stem_id")])
     @OrderColumn

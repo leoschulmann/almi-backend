@@ -6,13 +6,13 @@ import jakarta.persistence.Embeddable
 import jakarta.persistence.Enumerated
 
 @Embeddable
-class Transliteration {
+open class Transliteration {
     @Column(nullable = false)
-    val transliteration: String? = null;
+    open var transliteration: String? = null;
 
     @Enumerated
     @Column(nullable = false)
-    val language: Lang? = null;
+    open var language: Lang? = null;
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

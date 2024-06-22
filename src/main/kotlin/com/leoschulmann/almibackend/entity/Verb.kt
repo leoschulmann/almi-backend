@@ -4,6 +4,8 @@ import com.leoschulmann.almibackend.enm.Binyan
 import com.leoschulmann.almibackend.enm.GrammaticalPerson
 import com.leoschulmann.almibackend.enm.Plurality
 import com.leoschulmann.almibackend.enm.VerbForm
+import com.leoschulmann.almibackend.entity.embeddable.Translation
+import com.leoschulmann.almibackend.entity.embeddable.Transliteration
 import jakarta.persistence.*
 
 @Entity
@@ -40,4 +42,16 @@ open class Verb {
     @Enumerated(EnumType.STRING)
     @Column(name = "plurality", nullable = false)
     open var plurality: Plurality? = null
+
+    @ElementCollection
+    @CollectionTable(name = "verb_transliteration", joinColumns = [JoinColumn(name = "verb_id")])
+    open var transliteration: MutableSet<Transliteration> = mutableSetOf()
+
+    @ElementCollection
+    @OrderColumn
+    @CollectionTable(name = "verb_translation", joinColumns = [JoinColumn(name = "verb_id")])
+    open var translation: MutableList<Translation> = mutableListOf()
+
+    @OneToMany(mappedBy = "verb", cascade = [CascadeType.ALL], orphanRemoval = true)
+    open var examples: MutableSet<Example> = mutableSetOf()
 }

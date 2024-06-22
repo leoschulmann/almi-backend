@@ -6,13 +6,13 @@ import jakarta.persistence.Embeddable
 import jakarta.persistence.Enumerated
 
 @Embeddable
-class Translation {
+open class Translation {
     @Column(nullable = false)
-    val translation: String? = null;
+    open var translation: String? = null;
 
     @Enumerated
     @Column(nullable = false)
-    val lang: Lang? = null;
+    open var lang: Lang? = null;
 
 
     override fun equals(other: Any?): Boolean {
