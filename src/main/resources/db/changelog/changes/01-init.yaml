@@ -1,0 +1,252 @@
+databaseChangeLog:
+  - changeSet:
+      id: create seqs
+      author: ls
+      changes:
+        - createSequence:
+            incrementBy: 50
+            sequenceName: example_seq
+        - createSequence:
+            incrementBy: 50
+            sequenceName: stem_seq
+        - createSequence:
+            incrementBy: 50
+            sequenceName: verb_seq
+  - changeSet:
+      id: create tables
+      author: ls
+      changes:
+        - createTable:
+            tableName: stem
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: stem_pkey
+              - column:
+                  name: regular
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: verb
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: verb_pkey
+              - column:
+                  name: stem_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: binyan
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: regular
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nikkud
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: form
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: person
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: plurality
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: example
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: example_pkey
+              - column:
+                  name: verb_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: example
+                  type: VARCHAR(1024)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: stem_translation
+            columns:
+              - column:
+                  name: stem_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: stem_translation_pkey
+              - column:
+                  name: translation_order
+                  type: INT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: stem_translation_pkey
+              - column:
+                  name: translation
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: lang
+                  type: VARCHAR(2)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: verb_translation
+            columns:
+              - column:
+                  name: verb_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: verb_translation_pkey
+              - column:
+                  name: translation_order
+                  type: INT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: verb_translation_pkey
+              - column:
+                  name: translation
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: lang
+                  type: VARCHAR(2)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: verb_transliteration
+            columns:
+              - column:
+                  name: verb_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: verb_transliteration_pkey
+              - column:
+                  name: transliteration
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: verb_transliteration_pkey
+              - column:
+                  name: language
+                  type: VARCHAR(2)
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: verb_transliteration_pkey
+        - createTable:
+            tableName: example_translation
+            columns:
+              - column:
+                  name: example_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: example_translation_pkey
+              - column:
+                  name: translation
+                  type: VARCHAR(1024)
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: example_translation_pkey
+              - column:
+                  name: lang
+                  type: VARCHAR(2)
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: example_translation_pkey
+
+  - changeSet:
+      id: create fk
+      author: ls
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: stem_id
+            baseTableName: stem_translation
+            constraintName: fk2wrak7k5ch4us7e0ntlo5uplc
+            onDelete: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: stem
+
+        - addForeignKeyConstraint:
+            baseColumnNames: verb_id
+            baseTableName: example
+            constraintName: fk6yx1tw2ty1jw4e7ckagew5rgx
+            onDelete: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: verb
+
+        - addForeignKeyConstraint:
+            baseColumnNames: verb_id
+            baseTableName: verb_translation
+            constraintName: fkf3b64dee1nqoyuh26v520iky4
+            onDelete: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: verb
+
+        - addForeignKeyConstraint:
+            baseColumnNames: verb_id
+            baseTableName: verb_transliteration
+            constraintName: fknpke46s0aek7n7fdy3ecsuxa8
+            onDelete: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: verb
+
+        - addForeignKeyConstraint:
+            baseColumnNames: stem_id
+            baseTableName: verb
+            constraintName: fkosa9fr3bfebkdsfeqwv78ce9x
+            onDelete: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: stem
+
+        - addForeignKeyConstraint:
+            baseColumnNames: example_id
+            baseTableName: example_translation
+            constraintName: fkqtd5pa1qyjsh61jrvtb27ax2q
+            onDelete: NO ACTION
+            referencedColumnNames: id
+            referencedTableName: example

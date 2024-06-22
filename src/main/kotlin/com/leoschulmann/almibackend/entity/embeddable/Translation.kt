@@ -3,6 +3,7 @@ package com.leoschulmann.almibackend.entity.embeddable
 import com.leoschulmann.almibackend.enm.Lang
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
+import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 
 @Embeddable
@@ -10,7 +11,7 @@ open class Translation {
     @Column(nullable = false)
     open var translation: String? = null;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     open var lang: Lang? = null;
 
