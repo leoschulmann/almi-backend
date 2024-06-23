@@ -31,6 +31,7 @@ databaseChangeLog:
                   type: VARCHAR(64)
                   constraints:
                     nullable: false
+                    unique: true
         - createTable:
             tableName: verb
             columns:
@@ -250,3 +251,23 @@ databaseChangeLog:
             onDelete: NO ACTION
             referencedColumnNames: id
             referencedTableName: example
+
+  - changeSet:
+      id: create uniq indices
+      author: ls
+      changes:
+        - createIndex:
+            tableName: verb
+            indexName: verb_uniq
+            unique: true
+            columns:
+              - column:
+                  name: stem_id
+              - column:
+                  name: binyan
+              - column:
+                  name: form
+              - column:
+                  name: person
+              - column:
+                  name: plurality

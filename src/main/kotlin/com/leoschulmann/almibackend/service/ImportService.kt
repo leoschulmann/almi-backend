@@ -1,39 +1,54 @@
 package com.leoschulmann.almibackend.service
 
-import com.leoschulmann.almibackend.enm.Lang
+import com.leoschulmann.almibackend.enm.*
 import com.leoschulmann.almibackend.entity.Stem
 import com.leoschulmann.almibackend.entity.Verb
 import com.leoschulmann.almibackend.entity.embeddable.Translation
 import com.leoschulmann.almibackend.repo.StemRepository
+import com.leoschulmann.almibackend.repo.VerbRepository
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
-import java.util.regex.Pattern
+
+private val log = KotlinLogging.logger {}
 
 @Service
-class ImportService(private val stemRepository: StemRepository) {
+class ImportService(private val stemRepository: StemRepository, private val verbRepository: VerbRepository) {
 
     /**
-      Processes strings as
-      אכל,"есть, кушать","to eat"
-    */
+    Processes strings
+    שאל,спрашивать;задавать вопрос,ask;question
+     */
+    fun importStemV2(string: String): Stem {
 
-    fun importStem(input: String) {
+        val tokens = string.split(',').map { l -> l.trim() }.toList()
 
-        val split: List<String> = input.split(Pattern.compile(","), 2)
+        val ru = tokens[1].split(';').map { l ->
+            Translation(l.trim(), Lang.RU)
 
-        val hebrew: String = split[0];
+        }.toList()
+        val en = tokens[2].split(';').map { l ->
+            Translation(l.trim(), Lang.EN)
+        }.toList()
 
-        val code = split[1].trim().trim('\"')
+        return Stem(tokens[0], mutableSetOf(), (ru + en).toMutableList())
+    }
 
-        val ruList: List<Translation> = code.substring(0, code.indexOf('\"'))
-            .split(',')
-            .map { str -> Translation(str.trim(), Lang.RU) }
-            .toList();
 
-        val en: List<Translation> = code.substring(code.lastIndexOf('\"') + 1, code.length)
-            .split(',')
-            .map { s -> Translation(s.trim(), Lang.EN) }
-            .toList()
+    /**
+    קור,PAAL,קראנו,קָרָאנוּ,PAST,FIRST,PLURAL
+     */
+    fun importVerb(line: String): Verb {
+        val list: List<String> = line.split(',').map { l -> l.trim() }.toList()
 
-        stemRepository.save(Stem(hebrew, emptySet<Verb>().toMutableSet(), (ruList + en).toMutableList()))
+        val stem = stemRepository.findByRegular(list[0])
+        if (stem == null) {
+            log.warn { "Can't find stem $list[0]" }
+        }
+
+
+        return Verb(
+            list[2], list[3], stem, Binyan.valueOf(list[1]), VerbForm.valueOf(list[4]),
+            GrammaticalPerson.valueOf(list[5]), Plurality.valueOf(list[6])
+        )
     }
 }

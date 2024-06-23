@@ -31,4 +31,8 @@ open class Stem {
     @CollectionTable(name = "stem_translation", joinColumns = [JoinColumn(name = "stem_id")])
     @OrderColumn
     open var translation: MutableList<Translation> = mutableListOf()
+
+    override fun toString(): String {
+        return "Stem(regular=$regular)"
+    }
 }

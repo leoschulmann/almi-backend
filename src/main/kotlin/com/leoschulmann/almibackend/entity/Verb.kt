@@ -10,6 +10,28 @@ import jakarta.persistence.*
 
 @Entity
 open class Verb {
+
+
+    constructor(
+        regular: String?,
+        nikkud: String?,
+        stem: Stem?,
+        binyan: Binyan?,
+        form: VerbForm?,
+        person: GrammaticalPerson?,
+        plurality: Plurality?
+    ) {
+        this.regular = regular
+        this.nikkud = nikkud
+        this.stem = stem
+        this.binyan = binyan
+        this.form = form
+        this.person = person
+        this.plurality = plurality
+    }
+
+    constructor()
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "verb_gen")
     @SequenceGenerator(name = "verb_gen", sequenceName = "verb_seq")
@@ -54,4 +76,10 @@ open class Verb {
 
     @OneToMany(mappedBy = "verb", cascade = [CascadeType.ALL], orphanRemoval = true)
     open var examples: MutableSet<Example> = mutableSetOf()
+
+    override fun toString(): String {
+        return "Verb($regular, $nikkud, stem=${stem?.regular}, binyan=$binyan, form=$form, person=$person, plurality=$plurality)"
+    }
+
+
 }
