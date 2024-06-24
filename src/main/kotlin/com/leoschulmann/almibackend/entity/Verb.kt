@@ -6,9 +6,11 @@ import com.leoschulmann.almibackend.enm.Plurality
 import com.leoschulmann.almibackend.enm.VerbForm
 import com.leoschulmann.almibackend.entity.embeddable.Translation
 import com.leoschulmann.almibackend.entity.embeddable.Transliteration
+import com.leoschulmann.almibackend.validator.ValidVerb
 import jakarta.persistence.*
 
 @Entity
+@ValidVerb
 open class Verb {
 
 

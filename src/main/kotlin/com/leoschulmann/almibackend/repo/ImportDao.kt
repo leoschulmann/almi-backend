@@ -9,6 +9,7 @@ import com.leoschulmann.almibackend.entity.Verb
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
+import jakarta.validation.Validator
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
@@ -16,7 +17,7 @@ private val log = KotlinLogging.logger {}
 
 @Repository
 @PersistenceContext
-class ImportDao(private val em: EntityManager) {
+class ImportDao(private val em: EntityManager, private val validator: Validator) {
 
     @Transactional
     fun importStems(stems: List<Stem>) {
@@ -53,7 +54,10 @@ class ImportDao(private val em: EntityManager) {
 
         var count = 0
 
-        verbs.forEach { verb ->
+        verbs.forEach { verb: Verb? ->
+
+            validator.validate(verb)
+
             if (checkVerbExistence(verb!!.stem, verb.binyan, verb.form, verb.person, verb.plurality)) {
                 log.warn { "Verb $verb already exists!" }
             } else {
