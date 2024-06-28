@@ -15,6 +15,13 @@ open class Transliteration {
     @Column(nullable = false)
     open var language: Lang? = null;
 
+    constructor(transliteration: String?, language: Lang?) {
+        this.transliteration = transliteration
+        this.language = language
+    }
+
+    constructor()
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

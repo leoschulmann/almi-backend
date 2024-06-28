@@ -18,7 +18,7 @@ class CsvImportController(private val service: ImportService, private val dao: I
     @PostMapping("/stem")
     fun importStemsCsv(@RequestBody content: String) {
         BufferedReader(StringReader(content)).use { reader ->
-            val stems: MutableList<Stem> = reader.lines().map { line -> service.importStemV2(line) }.toList()
+            val stems: MutableList<Stem> = reader.lines().map { line -> service.parseStem(line) }.toList()
             dao.importStems(stems)
         }
     }
@@ -26,7 +26,7 @@ class CsvImportController(private val service: ImportService, private val dao: I
     @PostMapping("/verb")
     fun importVerbCsv(@RequestBody content: String) {
         BufferedReader(StringReader(content)).use { reader ->
-            val verbs: MutableList<Verb> = reader.lines().map { line -> service.importVerb(line) }
+            val verbs: MutableList<Verb> = reader.lines().map { line -> service.parseVerb(line) }
                 .filter { verb -> verb.stem != null && verb.binyan != null && verb.form != null && verb.person != null && verb.plurality != null }
                 .toList()
             dao.importVerbs(verbs)
