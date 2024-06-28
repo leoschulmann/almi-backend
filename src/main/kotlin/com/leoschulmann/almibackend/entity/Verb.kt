@@ -83,5 +83,19 @@ open class Verb {
         return "Verb($regular, $nikkud, stem=${stem?.regular}, binyan=$binyan, form=$form, person=$person, plurality=$plurality)"
     }
 
+    fun getVerbCode(): Int {
+        return ((form?.ordinal ?: 9) * 100) + ((person?.ordinal ?: 9) * 10) + (plurality?.ordinal ?: 9)
+    }
 
+    companion object {
+        fun decode(code: Int): String {
+            if (code > 1000 || code < 0) throw IllegalArgumentException("Unacceptable verb code: $code")
+
+            val pluralityCode: Plurality = Plurality.entries[code % 10]
+            val grammaticalPersonCode: GrammaticalPerson = GrammaticalPerson.entries[(code % 100) / 10]
+            val verbFormCode: VerbForm = VerbForm.entries[code / 100]
+
+            return "$verbFormCode $grammaticalPersonCode $pluralityCode"
+        }
+    }
 }

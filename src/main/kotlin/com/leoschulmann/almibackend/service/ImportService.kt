@@ -1,6 +1,8 @@
 package com.leoschulmann.almibackend.service
 
 import com.leoschulmann.almibackend.enm.*
+import com.leoschulmann.almibackend.enm.GrammaticalPerson.*
+import com.leoschulmann.almibackend.enm.VerbForm.*
 import com.leoschulmann.almibackend.entity.Stem
 import com.leoschulmann.almibackend.entity.Verb
 import com.leoschulmann.almibackend.entity.embeddable.Translation
@@ -11,6 +13,40 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
 
 private val log = KotlinLogging.logger {}
+
+private val possibleForms = setOf(
+    Verb(null, null, null, null, INFINITIVE, NONE, Plurality.NONE).getVerbCode(),
+
+    Verb(null, null, null, null, PRESENT, NONE, Plurality.SINGULAR_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, PRESENT, NONE, Plurality.SINGULAR_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, PRESENT, NONE, Plurality.PLURAL_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, PRESENT, NONE, Plurality.PLURAL_FEMININE).getVerbCode(),
+
+    Verb(null, null, null, null, PAST, FIRST, Plurality.SINGULAR).getVerbCode(),
+    Verb(null, null, null, null, PAST, SECOND, Plurality.SINGULAR_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, PAST, SECOND, Plurality.SINGULAR_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, PAST, THIRD, Plurality.SINGULAR_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, PAST, THIRD, Plurality.SINGULAR_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, PAST, FIRST, Plurality.PLURAL).getVerbCode(),
+    Verb(null, null, null, null, PAST, SECOND, Plurality.PLURAL_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, PAST, SECOND, Plurality.PLURAL_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, PAST, THIRD, Plurality.PLURAL).getVerbCode(),
+
+    Verb(null, null, null, null, FUTURE, FIRST, Plurality.SINGULAR).getVerbCode(),
+    Verb(null, null, null, null, FUTURE, SECOND, Plurality.SINGULAR_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, FUTURE, SECOND, Plurality.SINGULAR_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, FUTURE, THIRD, Plurality.SINGULAR_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, FUTURE, THIRD, Plurality.SINGULAR_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, FUTURE, FIRST, Plurality.PLURAL).getVerbCode(),
+    Verb(null, null, null, null, FUTURE, SECOND, Plurality.PLURAL_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, FUTURE, SECOND, Plurality.PLURAL_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, FUTURE, THIRD, Plurality.PLURAL_MASCULINE).getVerbCode(),
+
+    Verb(null, null, null, null, IMPERATIVE, NONE, Plurality.SINGULAR_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, IMPERATIVE, NONE, Plurality.SINGULAR_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, IMPERATIVE, NONE, Plurality.PLURAL_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, IMPERATIVE, NONE, Plurality.PLURAL_FEMININE).getVerbCode()
+)
 
 @Service
 class ImportService(private val stemRepository: StemRepository, private val verbRepository: VerbRepository) {
@@ -83,5 +119,23 @@ class ImportService(private val stemRepository: StemRepository, private val verb
             }
         }
         return false
+    }
+
+    fun validateListVerbs(verbs: MutableList<Verb>) {
+        val testSet = possibleForms.toMutableSet()
+
+        verbs.forEach { verb ->
+            val verbCode = verb.getVerbCode()
+            testSet.remove(verbCode)
+        }
+
+        if (testSet.isEmpty()) {
+            return
+        }
+        val missingVerbs: String = testSet.joinToString(
+            transform = fun(code: Int): CharSequence = Verb.decode(code),
+            separator = ", "
+        )
+        throw IllegalArgumentException("Incomplete verb set, missing ${testSet.size} forms [$missingVerbs]")
     }
 }

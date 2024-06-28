@@ -46,19 +46,13 @@ class ImportDao(private val em: EntityManager, private val validator: Validator)
     }
 
     @Transactional
-    fun importVerbs(verbs: List<Verb?>) {
-        if (verbs.isEmpty()) {
-            log.info { "Passed zero verbs to persist" }
-            return
-        }
-
+    fun importVerbs(verbs: List<Verb>) {
         var count = 0
 
-        verbs.forEach { verb: Verb? ->
-
+        verbs.forEach { verb: Verb ->
             validator.validate(verb)
 
-            if (checkVerbExistence(verb!!.stem, verb.binyan, verb.form, verb.person, verb.plurality)) {
+            if (checkVerbExistence(verb.stem, verb.binyan, verb.form, verb.person, verb.plurality)) {
                 log.warn { "Verb $verb already exists!" }
             } else {
                 em.persist(verb)
