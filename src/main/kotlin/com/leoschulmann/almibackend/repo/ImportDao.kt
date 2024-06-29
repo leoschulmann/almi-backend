@@ -6,21 +6,24 @@ import com.leoschulmann.almibackend.enm.Plurality
 import com.leoschulmann.almibackend.enm.VerbForm
 import com.leoschulmann.almibackend.entity.Stem
 import com.leoschulmann.almibackend.entity.Verb
+import com.leoschulmann.almibackend.validator.ValidVerbsList
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 import jakarta.validation.Validator
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.validation.annotation.Validated
 
 private val log = KotlinLogging.logger {}
 
+@Validated
 @Repository
 @PersistenceContext
 class ImportDao(private val em: EntityManager, private val validator: Validator) {
 
     @Transactional
-    fun importStems(stems: List<Stem>) {
+    fun persistStems(stems: List<Stem>) {
         if (stems.isEmpty()) {
             log.info { "Passed zero stems to persist" }
             return
@@ -46,7 +49,7 @@ class ImportDao(private val em: EntityManager, private val validator: Validator)
     }
 
     @Transactional
-    fun importVerbs(verbs: List<Verb>) {
+    fun persistVerbs(@ValidVerbsList verbs: List<Verb>) {
         var count = 0
 
         verbs.forEach { verb: Verb ->
