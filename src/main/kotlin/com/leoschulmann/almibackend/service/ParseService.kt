@@ -41,6 +41,8 @@ class ParseService(private val stemRepository: StemRepository) {
     fun parseVerb(line: String): Verb {
         val list: List<String> = line.split(',').map { l -> l.trim() }.toList()
 
+        if (list.size != 9) throw  IllegalArgumentException("Line $line does not match expected 9")
+
         val stem = stemRepository.findByRegular(list[0])
         if (stem == null) {
             log.warn { "Can't find stem $list[0]" }
@@ -56,7 +58,7 @@ class ParseService(private val stemRepository: StemRepository) {
 
         val verb = Verb(
             regular, niqqud, stem, Binyan.valueOf(list[1]), VerbForm.valueOf(list[4]),
-            GrammaticalPerson.valueOf(list[5]), Plurality.valueOf(list[6])
+            GrammaticalPerson.valueOf(list[5]), Plurality.parse(list[6])
         )
 
         verb.transliteration.add(Transliteration(list[7], Lang.RU))

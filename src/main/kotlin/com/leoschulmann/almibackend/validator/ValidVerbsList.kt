@@ -1,8 +1,8 @@
 package com.leoschulmann.almibackend.validator
 
-import com.leoschulmann.almibackend.enm.GrammaticalPerson.*
+import com.leoschulmann.almibackend.enm.GrammaticalPerson
 import com.leoschulmann.almibackend.enm.Plurality
-import com.leoschulmann.almibackend.enm.VerbForm.*
+import com.leoschulmann.almibackend.enm.VerbForm
 import com.leoschulmann.almibackend.entity.Verb
 import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator
@@ -30,6 +30,7 @@ class VerbsListValidator : ConstraintValidator<ValidVerbsList, List<Verb>> {
             ctx.disableDefaultConstraintViolation()
             ctx.buildConstraintViolationWithTemplate("Unexpected big number of verb forms: ${verbs.size}")
                 .addConstraintViolation()
+            return false
         }
 
         verbs.forEach { verb ->
@@ -51,35 +52,35 @@ class VerbsListValidator : ConstraintValidator<ValidVerbsList, List<Verb>> {
 }
 
 private val possibleVerbCodes: Set<Int> = setOf(
-    Verb(null, null, null, null, INFINITIVE, NONE, Plurality.NONE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.INFINITIVE, GrammaticalPerson.NONE, Plurality.NONE).getVerbCode(),
 
-    Verb(null, null, null, null, PRESENT, NONE, Plurality.SINGULAR_MASCULINE).getVerbCode(),
-    Verb(null, null, null, null, PRESENT, NONE, Plurality.SINGULAR_FEMININE).getVerbCode(),
-    Verb(null, null, null, null, PRESENT, NONE, Plurality.PLURAL_MASCULINE).getVerbCode(),
-    Verb(null, null, null, null, PRESENT, NONE, Plurality.PLURAL_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PRESENT, GrammaticalPerson.NONE, Plurality.SINGULAR_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PRESENT, GrammaticalPerson.NONE, Plurality.SINGULAR_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PRESENT, GrammaticalPerson.NONE, Plurality.PLURAL_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PRESENT, GrammaticalPerson.NONE, Plurality.PLURAL_FEMININE).getVerbCode(),
 
-    Verb(null, null, null, null, PAST, FIRST, Plurality.SINGULAR).getVerbCode(),
-    Verb(null, null, null, null, PAST, SECOND, Plurality.SINGULAR_MASCULINE).getVerbCode(),
-    Verb(null, null, null, null, PAST, SECOND, Plurality.SINGULAR_FEMININE).getVerbCode(),
-    Verb(null, null, null, null, PAST, THIRD, Plurality.SINGULAR_MASCULINE).getVerbCode(),
-    Verb(null, null, null, null, PAST, THIRD, Plurality.SINGULAR_FEMININE).getVerbCode(),
-    Verb(null, null, null, null, PAST, FIRST, Plurality.PLURAL).getVerbCode(),
-    Verb(null, null, null, null, PAST, SECOND, Plurality.PLURAL_MASCULINE).getVerbCode(),
-    Verb(null, null, null, null, PAST, SECOND, Plurality.PLURAL_FEMININE).getVerbCode(),
-    Verb(null, null, null, null, PAST, THIRD, Plurality.PLURAL).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PAST, GrammaticalPerson.FIRST, Plurality.SINGULAR).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PAST, GrammaticalPerson.SECOND, Plurality.SINGULAR_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PAST, GrammaticalPerson.SECOND, Plurality.SINGULAR_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PAST, GrammaticalPerson.THIRD, Plurality.SINGULAR_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PAST, GrammaticalPerson.THIRD, Plurality.SINGULAR_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PAST, GrammaticalPerson.FIRST, Plurality.PLURAL).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PAST, GrammaticalPerson.SECOND, Plurality.PLURAL_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PAST, GrammaticalPerson.SECOND, Plurality.PLURAL_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.PAST, GrammaticalPerson.THIRD, Plurality.PLURAL).getVerbCode(),
 
-    Verb(null, null, null, null, FUTURE, FIRST, Plurality.SINGULAR).getVerbCode(),
-    Verb(null, null, null, null, FUTURE, SECOND, Plurality.SINGULAR_MASCULINE).getVerbCode(),
-    Verb(null, null, null, null, FUTURE, SECOND, Plurality.SINGULAR_FEMININE).getVerbCode(),
-    Verb(null, null, null, null, FUTURE, THIRD, Plurality.SINGULAR_MASCULINE).getVerbCode(),
-    Verb(null, null, null, null, FUTURE, THIRD, Plurality.SINGULAR_FEMININE).getVerbCode(),
-    Verb(null, null, null, null, FUTURE, FIRST, Plurality.PLURAL).getVerbCode(),
-    Verb(null, null, null, null, FUTURE, SECOND, Plurality.PLURAL_MASCULINE).getVerbCode(),
-    Verb(null, null, null, null, FUTURE, SECOND, Plurality.PLURAL_FEMININE).getVerbCode(),
-    Verb(null, null, null, null, FUTURE, THIRD, Plurality.PLURAL_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.FUTURE, GrammaticalPerson.FIRST, Plurality.SINGULAR).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.FUTURE, GrammaticalPerson.SECOND, Plurality.SINGULAR_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.FUTURE, GrammaticalPerson.SECOND, Plurality.SINGULAR_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.FUTURE, GrammaticalPerson.THIRD, Plurality.SINGULAR_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.FUTURE, GrammaticalPerson.THIRD, Plurality.SINGULAR_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.FUTURE, GrammaticalPerson.FIRST, Plurality.PLURAL).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.FUTURE, GrammaticalPerson.SECOND, Plurality.PLURAL_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.FUTURE, GrammaticalPerson.SECOND, Plurality.PLURAL_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.FUTURE, GrammaticalPerson.THIRD, Plurality.PLURAL_MASCULINE).getVerbCode(),
 
-    Verb(null, null, null, null, IMPERATIVE, NONE, Plurality.SINGULAR_MASCULINE).getVerbCode(),
-    Verb(null, null, null, null, IMPERATIVE, NONE, Plurality.SINGULAR_FEMININE).getVerbCode(),
-    Verb(null, null, null, null, IMPERATIVE, NONE, Plurality.PLURAL_MASCULINE).getVerbCode(),
-    Verb(null, null, null, null, IMPERATIVE, NONE, Plurality.PLURAL_FEMININE).getVerbCode()
+    Verb(null, null, null, null, VerbForm.IMPERATIVE, GrammaticalPerson.NONE, Plurality.SINGULAR_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.IMPERATIVE, GrammaticalPerson.NONE, Plurality.SINGULAR_FEMININE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.IMPERATIVE, GrammaticalPerson.NONE, Plurality.PLURAL_MASCULINE).getVerbCode(),
+    Verb(null, null, null, null, VerbForm.IMPERATIVE, GrammaticalPerson.NONE, Plurality.PLURAL_FEMININE).getVerbCode()
 )
