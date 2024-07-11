@@ -6,6 +6,7 @@ import com.leoschulmann.almibackend.entity.Verb
 import com.leoschulmann.almibackend.entity.embeddable.Translation
 import com.leoschulmann.almibackend.entity.embeddable.Transliteration
 import com.leoschulmann.almibackend.repo.StemRepository
+import com.leoschulmann.almibackend.repo.VerbRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
 
@@ -13,7 +14,7 @@ private val log = KotlinLogging.logger {}
 
 
 @Service
-class ParseService(private val stemRepository: StemRepository) {
+class ParseService(private val stemRepository: StemRepository, private val verbRepository: VerbRepository) {
 
     /**
     Processes strings
@@ -67,6 +68,31 @@ class ParseService(private val stemRepository: StemRepository) {
         return verb
     }
 
+    fun parseVerbTranslation(line: String): Verb {
+        val tokens = line.split(',').map { l -> l.trim() }.toList()
+        val id: Long
+        try {
+            id = tokens[0].trim().toLong()
+        } catch (e: NumberFormatException) {
+            throw IllegalArgumentException("Line $line does not match expected number")
+        }
+
+        val verb: Verb =
+            verbRepository.findById(id).orElseThrow { IllegalArgumentException("Verb with id=$id does not exist") }
+
+        for (i in 1 until tokens.size) {
+            val translationValue = tokens[i].trim()
+            val translation = Translation(
+                translationValue,
+                if (hasCyrillic(translationValue)) Lang.RU else Lang.EN
+            )
+
+            verb.translation.add(translation)
+        }
+
+        return verb
+    }
+
     // Glory to the robots!
     fun hasNiqqud(text: String): Boolean {
         val hebrewLettersRange = '\u0590'..'\u05FF'
@@ -85,5 +111,10 @@ class ParseService(private val stemRepository: StemRepository) {
             }
         }
         return false
+    }
+
+    fun hasCyrillic(text: String): Boolean {
+        val cyrillicPattern = Regex("\\p{IsCyrillic}")
+        return cyrillicPattern.containsMatchIn(text)
     }
 }

@@ -3,6 +3,7 @@ package com.leoschulmann.almibackend.rest
 import com.leoschulmann.almibackend.entity.Stem
 import com.leoschulmann.almibackend.entity.Verb
 import com.leoschulmann.almibackend.repo.ImportDao
+import com.leoschulmann.almibackend.repo.VerbRepository
 import com.leoschulmann.almibackend.service.ParseService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -13,7 +14,9 @@ import java.io.StringReader
 
 @RestController
 @RequestMapping("/csv")
-class CsvImportController(private val parseService: ParseService, private val dao: ImportDao) {
+class CsvImportController(
+    private val parseService: ParseService, private val dao: ImportDao, private val verbRepository: VerbRepository
+) {
 
     @PostMapping("/stem")
     fun importStemsCsv(@RequestBody content: String) {
@@ -30,6 +33,14 @@ class CsvImportController(private val parseService: ParseService, private val da
                 .filter { verb -> verb.stem != null && verb.binyan != null && verb.form != null && verb.person != null && verb.plurality != null }
                 .toList()
             dao.persistVerbs(verbs)
+        }
+    }
+
+    @PostMapping("/verbtranslate")
+    fun importVerbTranslateCsv(@RequestBody content: String) {
+        BufferedReader(StringReader(content)).use { reader ->
+            val verbs: List<Verb> = reader.lines().map { line -> parseService.parseVerbTranslation(line) }.toList()
+            verbRepository.saveAll(verbs)
         }
     }
 }
