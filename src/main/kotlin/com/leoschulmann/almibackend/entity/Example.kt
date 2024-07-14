@@ -23,6 +23,10 @@ open class Example {
     @JoinColumn(name = "verb_id", nullable = false)
     open var verb: Verb? = null
 
+    @Version
+    open var version: Int = 0
+        protected set
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

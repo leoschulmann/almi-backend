@@ -79,6 +79,10 @@ open class Verb {
     @OneToMany(mappedBy = "verb", cascade = [CascadeType.ALL], orphanRemoval = true)
     open var examples: MutableSet<Example> = mutableSetOf()
 
+    @Version
+    open var version: Int = 0
+        protected set
+
     override fun toString(): String {
         return "Verb($regular, $nikkud, stem=${stem?.regular}, binyan=$binyan, form=$form, person=$person, plurality=$plurality)"
     }

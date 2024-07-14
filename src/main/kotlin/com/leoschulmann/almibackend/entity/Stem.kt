@@ -32,6 +32,10 @@ open class Stem {
     @OrderColumn
     open var translation: MutableList<Translation> = mutableListOf()
 
+    @Version
+    open var version: Int = 0
+        protected set
+
     override fun toString(): String {
         return "Stem(regular=$regular)"
     }

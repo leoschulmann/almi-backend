@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: create versions
+      author: ls
+      changes:
+        - addColumn:
+            tableName: verb
+            columns:
+              - column:
+                  name: version
+                  type: int
+                  value: "0"
+        - addColumn:
+            tableName: stem
+            columns:
+              - column:
+                  name: version
+                  type: int
+                  value: "0"
+        - addColumn:
+            tableName: example
+            columns:
+              - column:
+                  name: version
+                  type: int
+                  value: "0"
