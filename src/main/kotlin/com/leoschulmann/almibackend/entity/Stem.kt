@@ -19,7 +19,7 @@ open class Stem {
     @SequenceGenerator(name = "stem_gen", sequenceName = "stem_seq")
     @Column(name = "id", nullable = false)
     open var id: Long? = null
-        protected set
+//        protected set
 
     @Column(name = "regular", nullable = false, length = 64)
     open var regular: String? = null
